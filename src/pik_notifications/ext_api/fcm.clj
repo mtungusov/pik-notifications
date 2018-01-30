@@ -12,7 +12,7 @@
 
 (def max-ids-in-notification 1000)
 
-(def dry-run true)
+(def dry-run false)
 
 (defn default-params []
   {:insecure? true
