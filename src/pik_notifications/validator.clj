@@ -37,4 +37,14 @@
 ;  {:tokens ["qwer" "123we"]
 ;   :alert "test 1"})
 
+(s/def
+  ::confirm-delete-invalid-tokens
+  string?)
 
+;(s/explain ::confirm-delete-invalid-tokens "")
+
+(s/def
+  ::delete-invalid-tokens-request
+  (s/keys :req-un [::confirm-delete-invalid-tokens]))
+
+;(s/explain ::delete-invalid-tokens-request {:confirm-delete-invalid-tokens "qwe"})

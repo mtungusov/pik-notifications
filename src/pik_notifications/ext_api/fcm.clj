@@ -62,15 +62,14 @@
           (= 200 status) (assoc :result (process-resp-body! filtered-ids body)))))))
 
 
-
-
-;; "notification-req":{"alert":"Привет!","tokens":["tok1" "tok2"]}
-
 (defn send-all [{:keys [alert tokens]}]
+  ;; "notification-req":{"alert":"Привет!","tokens":["tok1" "tok2"]}
   (->> (partition max-ids-in-notification max-ids-in-notification nil tokens)
-      (map #(send-notification % alert))
-      (remove nil?)
-      (reduce conj [])))
+       (map #(send-notification % alert))
+       (map #(get-in % [:result :success]))
+       (remove nil?)
+       (reduce +)
+       (assoc {} :success)))
 
 ;(def ids ["001" "APA91bGms1iKIPdKURo7CAi1bGx4kZ_1EB-8m950An3LPDkvMRkxRKofz7yvuZGvzrFpDl6hjOz5zjNbMA1ue2xfBknnGU-dwkUVC74A-rYHIOdydX2PgDZ4IPdT2C_Gjl6eHq_5c356" "APA91bHj6HU0Zvftt8bGmWo1zf95s0M0KT3K4_6U55LN9tByUM_J3r3yqW41ehelDMb2cRZ0iiR0xcvo3g1nS-rKTWGi8PK4Ln8K9zRVIBtB_HIp6iZFlCqtpOP9P7H5wp6e_4cSXAL5" "234" "456"])
 
@@ -82,7 +81,10 @@
 
 ;(identity @db/invalid-ids)
 
-;(send-all ids "t-1")
+;(send-all {:tokens ids :alert "t-1"})
+
+;(def r [{:status 200, :result {:success 1}} {:status 200, :result {:success 1}}])
+;(map #(get-in % [:result :success]) r)
 
 ;(def resp (post api-url (make-request (make-notification ids "test-0"))))
 ;(:body @resp)
