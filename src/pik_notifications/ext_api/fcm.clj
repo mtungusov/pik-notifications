@@ -70,14 +70,17 @@
 
 
 ;(def ids ["001" "APA91bGms1iKIPdKURo7CAi1bGx4kZ_1EB-8m950An3LPDkvMRkxRKofz7yvuZGvzrFpDl6hjOz5zjNbMA1ue2xfBknnGU-dwkUVC74A-rYHIOdydX2PgDZ4IPdT2C_Gjl6eHq_5c356" "APA91bHj6HU0Zvftt8bGmWo1zf95s0M0KT3K4_6U55LN9tByUM_J3r3yqW41ehelDMb2cRZ0iiR0xcvo3g1nS-rKTWGi8PK4Ln8K9zRVIBtB_HIp6iZFlCqtpOP9P7H5wp6e_4cSXAL5" "234" "456"])
-;
+
 ;(def filtered-ids (db/filter-ids ids))
-;
+
 ;(def req (make-request (make-notification filtered-ids "test 1")))
-;
+
 ;(identity req)
-;
+
 ;(:url api)
+
+;(c/post-try (:url api) req)
+;(c/post-safely (:url api) req)
 ;
 ;(def resp (c/post-safely (:url api) req))
 ;(identity resp)

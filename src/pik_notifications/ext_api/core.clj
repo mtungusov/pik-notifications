@@ -5,6 +5,9 @@
             [safely.core :refer [safely]]))
 
 
+(def max-retry 10)
+
+
 (defn to-json [v]
   (j/write-value-as-string v))
 
@@ -23,7 +26,16 @@
           (cond-> {:status status}
             (= 401 status) (assoc :error "API Authentication Error")
             (= 400 status) (assoc :error "Invalid Request")
-            (= 200 status) (assoc :body (from-json body))))))))
+            (= 200 status) (assoc :body (from-json body))))))
+    (catch Exception _
+      (println (identity Exception))
+      (throw+ "my-internal-error"))))
+
+
+(defn retry-post? [e]
+  (let [not-retry-errs #{"my-internal-error"}
+        obj (:object (ex-data e))]
+    (not (not-retry-errs obj))))
 
 
 (defn post-safely [url params]
@@ -31,5 +43,6 @@
     (post-try url params)
     :on-error
     :log-errors true
-    :max-retry 10
-    :retry-delay [:random-exp-backoff :base 500 :+/- 0.50 :max 180000]))
+    :max-retry max-retry
+    :retry-delay [:random-exp-backoff :base 500 :+/- 0.50 :max 180000]
+    :retryable-error? #(retry-post? %)))
